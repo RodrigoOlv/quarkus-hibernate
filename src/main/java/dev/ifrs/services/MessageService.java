@@ -1,7 +1,5 @@
 package dev.ifrs.services;
 
-
-
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,6 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import dev.ifrs.entity.Channel;
 import dev.ifrs.entity.Message;
 import dev.ifrs.entity.User;
 
@@ -18,12 +17,17 @@ import dev.ifrs.entity.User;
 public class MessageService {
     
     @GET
-    @Path("/add/{user}/{text}")
+    @Path("/add/{userId}/{channelId}/{text}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public User add(@PathParam("name") String name, @PathParam("text") String text) {
+    public Channel add(
+        @PathParam("userId") Long userId,
+        @PathParam("channelId") Long channelId,
+        @PathParam("text") String text
+    ) {
 
-        User user = User.find("name", name).firstResult();
+        User user = User.findById(userId);
+        Channel channel = Channel.findById(channelId);
         Message message = new Message();
 
         message.setText(text);
@@ -31,7 +35,7 @@ public class MessageService {
 
         user.addMessage(message);
 
-        return user;
+        return channel;
     }
 
 }
